@@ -1,7 +1,17 @@
 const db = require('../../data/dbConfig')
 
 async function find() {
-  const tasks = await db('tasks')
+  const tasks = await db('tasks as t')
+    .leftJoin('projects as p', 't.project_id', 'p.project_id')
+    .select(
+      'task_id',
+      'task_description',
+      'task_notes',
+      'task_completed',
+      'p.project_name',
+      'p.project_description'
+    )
+
   const results = tasks.map(task => {
     const result = {
       ...task,
